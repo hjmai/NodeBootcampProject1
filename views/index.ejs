@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Fire Rocks</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/css/materialize.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+    <script src="/javascript/jquery.js"></script>
+    <script src="/javascript/materialize.min.js"></script>
+</head>
+<body>
+
+   
+    <nav class="brown lighten-2">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo" style="margin-left: 20px;">FireRocks</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="#">Twitter Feed</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row scroll" style="margin-bottom: 0;">
+            <div class="col s9 mainBodyContainer center-align">
+                <div class="row">
+                    <form class="col s6">
+                        <div class="row">
+                            <div class="input-field col s9">
+                                <input id="searchCard" type="text" class="validate" autocomplete="off">
+                                <label for="searchCard">Search Card</label>
+                            </div>
+                            <div class="input-field col s1">
+                                <button data-target="modal2" class="btn modal-trigger waves-effect waves-light searchBtn" type="submit" name="action">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="col s6">
+                        <div class="row">
+                            <div class="col s6 left-align">
+                                <div id="currentDeckDisplay">Current Deck: </div>
+                                <div id="upvotedCount">Upvoted: </div>
+                                <div id="downvotedCount">Downvoted: </div>
+                            </div>
+                            <div class="col s6 right-align">
+                                <div><button id="upvote" class="tooltipped" data-position="left" data-tooltip="Upvote the deck"><i class="material-icons">arrow_upward</i></button></div>
+                                <div><button id="downvote" class="tooltipped" data-position="left" data-tooltip="Downvote the deck"><i class="material-icons">arrow_downward</i></button></div>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+                <div class="row mainRow">
+                </div>
+            </div>
+            <div class="col s3 sideBar">
+                <button data-target="modal1" class="btn modal-trigger addDeck">Add Deck</button>
+                <ul id="slide-out" class="right side-nav full center-align brown lighten-4 deckList">                    
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <form autocomplete="off">
+                <input type="text" id="createDeck" placeholder="Add Deck Name" maxlength="20">
+                <input type="text" id="addAuthor" placeholder="Author's Name" maxlength="20">
+                <div class="input-field col s12">
+                    <select id="Deck-class" required>
+                        <option value="" disabled selected>Deck Class</option>
+                        <option value="Druid">Druid</option>
+                        <option value="Hunter">Hunter</option>
+                        <option value="Mage">Mage</option>
+                        <option value="Paladin">Paladin</option>
+                        <option value="Priest">Priest</option>
+                        <option value="Rogue">Rogue</option>
+                        <option value="Shaman">Shaman</option>
+                        <option value="Warlock">Warlock</option>
+                        <option value="Warrior">Warrior</option>
+                    </select>                  
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-action modal-close btn-flat save">Save</button>
+        </div>
+      </div>
+
+      <div id="modal2" class="modal">
+        <div id="searchModal" class="modal-content">
+            <div class='container-fluid'>
+                <div id="searchRow" class='row'>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-action modal-close btn-flat">Done</button>
+        </div>
+      </div>
+    <script src="/javascript/app.js"></script>
+</body>
+</html>
