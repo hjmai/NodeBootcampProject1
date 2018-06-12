@@ -249,7 +249,7 @@ database.ref('decks/').on('value', function (snapshot) {
         var deckClass = obj.selectedDeck.deckClass.toLowerCase();
         var button = $('<button class="btn purple deckBtn waves-effect">');
         button.data("key", obj.selectedDeck);
-        button.html('<img class="classIcon" style="height: 30px; width: 30px;" src="./assets/images/' + deckClass.toLowerCase() + '.png"> ' + obj.selectedDeck.name);
+        button.html('<img class="classIcon" style="height: 30px; width: 30px;" src="/images/' + deckClass.toLowerCase() + '.png"> ' + obj.selectedDeck.name);
         button.prepend("&uarr; " + (obj.selectedDeck.upvotes - obj.selectedDeck.downvotes) + " ");
         // button.text(obj.selectedDeck.name);
         $('.deckList').append(button);
