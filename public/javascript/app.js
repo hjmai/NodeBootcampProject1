@@ -12,6 +12,16 @@ function addCard(cardObject) {
     }
 
 }
+//becuase an empty deck still has a placeholder in the card array, this shows a correct card count even if the deck is 'empty'
+function showCardCount() {
+    if (!selectedDeck.firstCard) {
+        $("#cardCount").html("Number of cards: " + selectedDeck.cards.length + "/30")
+    }
+    else {
+        $("#cardCount").html("Number of cards: 0/30")
+
+    }
+}
 
 //function for drawing cards
 function drawCards(cardImage, loopedCard) {
@@ -42,6 +52,7 @@ $('body').on('click', '.deckBtn', function () {
             var mainDisplayImg = $('<img class="responsive-img">');
             var removeButton = $('<button class="btn purple waves-effect">');
             removeButton.html("Remove").addClass("removeButton");
+            removeButton.addClass("z-depth-3");
             removeButton.data("key", selectedDeck.cards[i]);
             mainDisplayImg.attr("src", selectedDeck.cards[i].img);
             mainCardDiv.append(mainDisplayImg);
@@ -52,6 +63,9 @@ $('body').on('click', '.deckBtn', function () {
         }
     }
     $("#currentDeckDisplay").html("Current Deck: " + selectedDeck.name);
+    $("#upvotedCount").html("Upvoted: " + selectedDeck.upvotes);
+    $("#downvotedCount").html("Downvoted: " + selectedDeck.downvotes);
+    showCardCount();
 })
 
 $(document).ready(function () {
@@ -88,6 +102,8 @@ class UserDeck {
         this.complete = false;
         this.firstCard = true;
         this.deckId = (Math.ceil(Math.random() * 100000));
+        this.upvotes = 0;
+        this.downvotes = 0;
     }
 };
 
@@ -100,6 +116,8 @@ $('.save').on('click', function () {
     if (dClass != null && deckName != "" && authorName != "") {
         selectedDeck = new UserDeck(deckName, authorName, dClass);
         $("#currentDeckDisplay").html("Current Deck: " + selectedDeck.name);
+        $("#upvotedCount").html("Upvoted: " + selectedDeck.upvotes);
+        $("#downvotedCount").html("Downvoted: " + selectedDeck.downvotes);
         database.ref('decks/' + selectedDeck.deckId).set({
             selectedDeck
         });
@@ -113,10 +131,12 @@ $('.save').on('click', function () {
 
 //function for action after pressing add button
 $("body").on("click", ".addBtn", function () {
+    cardCount = 0;
     if (selectedDeck.cards.length < 30) {
-        cardCount = 0;
         for (var j = 0; j < selectedDeck.cards.length; j++) {
-            if ($(this).data('key') === selectedDeck.cards[j]) {
+            var cardObj = $(this).data('key')
+            var selectedCardId = cardObj.cardId
+            if (selectedCardId === selectedDeck.cards[j].cardId) {
                 cardCount++
             }
         }
@@ -127,7 +147,7 @@ $("body").on("click", ".addBtn", function () {
             });
         }
         else {
-            alert("cant use cards more than twice");
+            alert("You can only use the same card twice in one deck.");
         }
         $(".mainRow").empty();
         for (var k = 0; k < selectedDeck.cards.length; k++) {
@@ -135,11 +155,11 @@ $("body").on("click", ".addBtn", function () {
         }
     }
     else {
-        alert("Too many cards dude");
+        alert("You can only have a maximum of 30 cards per deck.");
     }
 })
 
-//function after pressing remove button{
+//function after pressing remove button
 $("body").on("click", ".removeButton", function (e) {
     var rmCard = $(this).data('key');
     var deckLocation = selectedDeck.cards.indexOf(rmCard);
@@ -164,6 +184,7 @@ $("body").on("click", ".removeButton", function (e) {
 $('.searchBtn').on("click", function (e) {
     var userQ = $("#searchCard").val().trim();
     var fullUrl = queryUrl + userQ + "?collectible=1";
+    $("#searchRow").empty();
     e.preventDefault();
     $.ajax({
         url: fullUrl,
@@ -173,8 +194,8 @@ $('.searchBtn').on("click", function (e) {
             },
         method: "GET"
     }).then(function (response) {
-        $("#searchRow").empty();
         function showResults() {
+            var findCount = 0
             for (var i = 0; i < response.length; i++) {
                 if (response[i].playerClass === selectedDeck.deckClass || response[i].playerClass === 'Neutral') {
                     cardImage = response[i].img;
@@ -187,13 +208,27 @@ $('.searchBtn').on("click", function (e) {
                     displayImg.attr("src", cardImage);
                     cardDiv.append(displayImg);
                     cardDiv.append(addButton);
+                    addButton.addClass("z-depth-3");
                     var column = $('<div class="col s4">');
                     column.html(cardDiv);
                     $('#searchRow').append(column);
+                    findCount++;
                 };
             };
+            if (findCount === 0) {
+                $('#searchRow').html("No matching cards found. Only neutral cards or cards that match your class are available.");
+            }
         };
+
         showResults();
+
+    }).fail(function () {
+        if (selectedDeck) {
+            $('#searchRow').html("No results, please try searching again.")
+        }
+        else {
+            $('#searchRow').html("You need to select a deck before searching.")
+        };
     })
 });
 
@@ -201,28 +236,41 @@ $('.searchBtn').on("click", function (e) {
 database.ref('decks/').on('value', function (snapshot) {
     $('.deckList').empty();
     $(".mainRow").empty();
+    if (selectedDeck) {
+        $("#upvotedCount").html("Upvoted: " + selectedDeck.upvotes);
+        $("#downvotedCount").html("Downvoted: " + selectedDeck.downvotes);
+        showCardCount();
+        for (var v = 0; v < selectedDeck.cards.length; v++) {
+            drawCards(selectedDeck.cards[v].img, selectedDeck.cards[v]);
+        }
+    }
     snapshot.forEach(function (childSnapshot) {
         var obj = childSnapshot.val();
         var deckClass = obj.selectedDeck.deckClass.toLowerCase();
         var button = $('<button class="btn purple deckBtn waves-effect">');
         button.data("key", obj.selectedDeck);
-        button.html('<img class="classIcon" style="height: 30px; width: 30px;" src="/images/' + deckClass + '.png"> ' + obj.selectedDeck.name);
+        button.html('<img class="classIcon" style="height: 30px; width: 30px;" src="./assets/images/' + deckClass.toLowerCase() + '.png"> ' + obj.selectedDeck.name);
+        button.prepend("&uarr; " + (obj.selectedDeck.upvotes - obj.selectedDeck.downvotes) + " ");
         // button.text(obj.selectedDeck.name);
         $('.deckList').append(button);
     })
 
 })
 
-//my search function
-$('#search').keypress(function (e) {
-    e.preventDefault();
-    if (e.which == 13 && $('#search').val() !== '') {
-        var value = $('#search').val();
-        $('#search').val('');
-        var column = $('<div class="col s4">');
-        column.text(value);
-        $('.mainRow').append(column);
-    }
+
+//upvoting and downvoting buttons
+$("#upvote").on("click", function () {
+    selectedDeck.upvotes++;
+    database.ref('decks/' + selectedDeck.deckId).set({
+        selectedDeck
+    });
+});
+
+$("#downvote").on("click", function () {
+    selectedDeck.downvotes++;
+    database.ref('decks/' + selectedDeck.deckId).set({
+        selectedDeck
+    });
 });
 
 $(document).ready(function () {
