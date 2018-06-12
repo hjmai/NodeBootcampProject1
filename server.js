@@ -34,4 +34,5 @@ database.ref().child('decks/').on('child_added', function(childSnapshot){
 	var channel = client.channels;
 	var generalChannel = client.channels.get('455546465713127459');
 	generalChannel.send('New deck was created! Check it out at: https://hjmai.github.io/BootcampProject1/');
+	console.log(childSnapshot);
 })
