@@ -33,6 +33,12 @@ client.login(botToken);
 database.ref().child('decks/').on('child_added', function(childSnapshot){
 	var channel = client.channels;
 	var generalChannel = client.channels.get('455546465713127459');
-	generalChannel.send('New deck was created! Check it out at: https://hjmai.github.io/BootcampProject1/');
-	console.log(childSnapshot.val());
+	generalChannel.send('New deck created: \n' +
+						'```' +
+						'\nDeck Name: ' + childSnapshot.val().selectedDeck.name + 
+						'\nDeck Class: ' + childSnapshot.val().selectedDeck.deckClass +
+						'\nAuthor: ' + childSnapshot.val().selectedDeck.author +
+						'```' + 
+						'Check it out at: https://heroku-firerocks-8080.herokuapp.com/');
+	// generalChannel.send('New deck was created by! Check it out at: https://hjmai.github.io/BootcampProject1/');
 })
