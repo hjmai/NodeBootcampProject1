@@ -40,5 +40,4 @@ database.ref().child('decks/').on('child_added', function(childSnapshot){
 						'\nAuthor: ' + childSnapshot.val().selectedDeck.author +
 						'```' + 
 						'Check it out at: https://heroku-firerocks-8080.herokuapp.com/\n');
-	// generalChannel.send('New deck was created by! Check it out at: https://hjmai.github.io/BootcampProject1/');
 })

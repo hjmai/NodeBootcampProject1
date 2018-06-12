@@ -65,6 +65,7 @@ $('body').on('click', '.deckBtn', function () {
     $("#currentDeckDisplay").html("Current Deck: " + selectedDeck.name);
     $("#upvotedCount").html("Upvoted: " + selectedDeck.upvotes);
     $("#downvotedCount").html("Downvoted: " + selectedDeck.downvotes);
+    $("#deckAuthor").html("Author: " + selectedDeck.author);
     showCardCount();
 })
 
@@ -118,6 +119,7 @@ $('.save').on('click', function () {
         $("#currentDeckDisplay").html("Current Deck: " + selectedDeck.name);
         $("#upvotedCount").html("Upvoted: " + selectedDeck.upvotes);
         $("#downvotedCount").html("Downvoted: " + selectedDeck.downvotes);
+        $("#deckAuthor").html("Author: " + selectedDeck.author);
         database.ref('decks/' + selectedDeck.deckId).set({
             selectedDeck
         });
@@ -125,7 +127,13 @@ $('.save').on('click', function () {
         drawCards();
     }
     else {
-        alert("Need to fill in deck information");
+        M.toast({
+            html: 'You need to fill in deck information!', 
+            classes: 'red',
+            options: {
+                outDuration: 3000,
+            }
+        })
     }
 });
 
@@ -147,7 +155,12 @@ $("body").on("click", ".addBtn", function () {
             });
         }
         else {
-            alert("You can only use the same card twice in one deck.");
+            M.toast({html: 'You can only use the same card twice in one deck.', 
+                classes: 'red',
+                options: {
+                    outDuration: 3000,
+                }
+            })
         }
         $(".mainRow").empty();
         for (var k = 0; k < selectedDeck.cards.length; k++) {
@@ -155,7 +168,13 @@ $("body").on("click", ".addBtn", function () {
         }
     }
     else {
-        alert("You can only have a maximum of 30 cards per deck.");
+        M.toast({
+            html: 'You can only have a maximum of 30 cards per deck.', 
+            classes: 'red',
+            options: {
+                outDuration: 3000,
+            }
+        })
     }
 })
 
@@ -239,6 +258,7 @@ database.ref('decks/').on('value', function (snapshot) {
     if (selectedDeck) {
         $("#upvotedCount").html("Upvoted: " + selectedDeck.upvotes);
         $("#downvotedCount").html("Downvoted: " + selectedDeck.downvotes);
+        $("#deckAuthor").html("Author: " + selectedDeck.author);
         showCardCount();
         for (var v = 0; v < selectedDeck.cards.length; v++) {
             drawCards(selectedDeck.cards[v].img, selectedDeck.cards[v]);
