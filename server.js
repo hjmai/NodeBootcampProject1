@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const botToken = "commentedout";
+const botToken = "/* token of bot has been removed for security purposes */";
 const firebaseAdmin = require('firebase-admin');
+// Firebase credentials were stored in a JSON object but removed from github repository for security purposes
 var serviceAccount = require('./fire-rocks-7d02e-firebase-adminsdk-wl32u-e0e89874b6.json');
 firebaseAdmin.initializeApp({
 	credential: firebaseAdmin.credential.cert(serviceAccount),
@@ -32,7 +33,7 @@ client.login(botToken);
 
 database.ref().child('decks/').on('child_added', function(childSnapshot){
 	var channel = client.channels;
-	var generalChannel = client.channels.get('455546465713127459');
+	var generalChannel = client.channels.get('/* channel id goes here, removed for security purposes */');
 	generalChannel.send('New deck created: \n' +
 						'```' +
 						'\nDeck Name: ' + childSnapshot.val().selectedDeck.name + 
