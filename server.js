@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const botToken = "NDU0MDI0OTY0NTUxNjA2Mjgy.Df9acQ.XgBA5jPG6e1eTHhN0n1G5UB5dcc";
+const botToken = "commentedout";
 const firebaseAdmin = require('firebase-admin');
 var serviceAccount = require('./fire-rocks-7d02e-firebase-adminsdk-wl32u-e0e89874b6.json');
 firebaseAdmin.initializeApp({
